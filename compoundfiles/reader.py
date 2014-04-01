@@ -28,7 +28,11 @@ from __future__ import (
     print_function,
     division,
     )
-str = type('')
+
+try:  # Python < 3
+    basestring
+except NameError:  # Python 3
+    basestring = str
 
 
 import io
@@ -151,7 +155,7 @@ class CompoundFileReader(object):
 
     def __init__(self, filename_or_obj):
         super(CompoundFileReader, self).__init__()
-        if isinstance(filename_or_obj, (str, bytes)):
+        if isinstance(filename_or_obj, (basestring, bytes)):
             self._opened = True
             self._file = io.open(filename_or_obj, 'rb')
         else:
@@ -278,7 +282,8 @@ class CompoundFileReader(object):
         """
         if isinstance(filename_or_entity, bytes):
             filename_or_entity = filename_or_entity.decode(FILENAME_ENCODING)
-        if isinstance(filename_or_entity, str):
+        
+        if isinstance(filename_or_entity, basestring):
             entity = self.root
             for name in filename_or_entity.split('/'):
                 if name:
